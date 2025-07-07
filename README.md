@@ -86,10 +86,6 @@ Assurez-vous d'avoir Node.js et npm (ou Yarn) installés.
     ```
     L'application frontend devrait être accessible via `http://localhost:5173` (ou un autre port Vite).
 
-## 📞 Contact
 
-* Votre nom/pseudo : **404reo01**
-* GitHub : [https://github.com/404reo01](https://github.com/404reo01)
-* LinkedIn : [Lien vers votre profil LinkedIn si vous voulez le partager]
 
 ---
