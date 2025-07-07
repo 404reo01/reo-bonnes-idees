@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import moonImage from '../assets/moon.jpg';
 import Header from '../components/Header';
-import axios from 'axios'; // <-- NOUVEL IMPORT : Ajoutez ceci si vous utilisez axios
+import axios from 'axios';
 
 function ChatbotPage() {
   const [messages, setMessages] = useState([]);
@@ -11,9 +11,12 @@ function ChatbotPage() {
   const [step, setStep] = useState(0);
   const [userResponses, setUserResponses] = useState({});
   const [generatedIdea, setGeneratedIdea] = useState(null);
-  const [isLoadingIdea, setIsLoadingIdea] = useState(false); // <-- NOUVEL ÉTAT : Pour gérer l'état de chargement
+  const [isLoadingIdea, setIsLoadingIdea] = useState(false);
 
   const messagesEndRef = useRef(null);
+
+  // LA SEULE MODIFICATION ICI : Votre URL de backend Render
+  const BASE_BACKEND_URL = 'https://reo-bonnes-idees.onrender.com';
 
   const questions = [
     "Bonjour ! Je suis Reo, votre assistant pour la génération d'idées. Pour commencer, quel est le domaine ou le secteur d'activité qui vous intéresse le plus pour votre projet ? (Ex: technologie, environnement, éducation, santé, art, etc.)",
@@ -47,7 +50,7 @@ function ChatbotPage() {
     }
     // 3. Toutes les questions ont été posées (step === questions.length)
     // C'est le moment d'afficher le message de génération et de déclencher l'appel API.
-    else if (step === questions.length && !generatedIdea && !isLoadingIdea) { // <-- Ajout de !isLoadingIdea
+    else if (step === questions.length && !generatedIdea && !isLoadingIdea) {
       console.log("[useEffect] Condition 3 (Generate Idea): All questions answered. Attempting to trigger generation.");
 
       const isGeneratingMessageAdded = messages.some(msg => msg.sender === 'bot' && msg.text.includes("Je génère votre idée de projet..."));
@@ -55,19 +58,17 @@ function ChatbotPage() {
       if (!isGeneratingMessageAdded) {
           console.log("[useEffect] Condition 3: Adding 'generating' message and scheduling API call.");
           setMessages((prevMessages) => [...prevMessages, { sender: 'bot', text: "Merci pour toutes ces informations ! Je génère votre idée de projet..." }]);
-          setIsLoadingIdea(true); // <-- Démarre l'état de chargement
+          setIsLoadingIdea(true);
 
           setTimeout(() => {
-            // Appel à la nouvelle fonction qui fera l'appel API
-            generateProjectIdeaFromAPI(); 
-          }, 1500); // Délai avant l'appel API
+            generateProjectIdeaFromAPI();
+          }, 1500);
       } else {
           console.log("[useEffect] Condition 3: 'Generating' message already added, waiting for simulation/API call to complete.");
       }
     }
     console.log("--- useEffect END ---");
-  }, [step, userResponses, generatedIdea, isLoadingIdea]); // <-- Ajout de isLoadingIdea aux dépendances
-
+  }, [step, userResponses, generatedIdea, isLoadingIdea, messages]); // <-- Ajout de 'messages' comme dépendance pour éviter les warnings
 
   // --- Effet pour faire défiler la conversation ---
   useEffect(() => {
@@ -77,7 +78,7 @@ function ChatbotPage() {
   // --- Logique d'envoi de message ---
   const handleSendMessage = () => {
     if (input.trim() === '') return;
-    if (isLoadingIdea) return; // Ne pas envoyer de message si une idée est en cours de génération
+    if (isLoadingIdea) return;
 
     console.log(`[handleSendMessage] User input: "${input.trim()}" at step ${step}`);
 
@@ -99,28 +100,23 @@ function ChatbotPage() {
   const generateProjectIdeaFromAPI = async () => {
     console.log("[generateProjectIdeaFromAPI] Calling backend API for idea generation.");
 
-    // Mapper les userResponses aux noms attendus par votre backend
     const questionnaireResponses = {
-      domain: userResponses.question0, // Assurez-vous que les indices correspondent aux questions
+      domain: userResponses.question0,
       interests: userResponses.question1,
-      projectObjective: userResponses.question2, // Ancien 'projectType' dans votre prompt
-      technologies: userResponses.question3, // Ancien 'languagePreference'
-      targetAudience: userResponses.question4, // Ancien 'public cible'
-      githubUsername: userResponses.question5, // Pour récupérer les infos GitHub si nécessaire
-      // Il manque level et timeEstimate dans vos questions actuelles.
-      // Si vous voulez les inclure dans le prompt, vous devrez ajouter ces questions au chatbot.
-      // Pour l'instant, on va juste laisser des valeurs par défaut ou null.
-      level: "Débutant/Intermédiaire", // Valeur par défaut si non demandé
-      timeEstimate: "Quelques semaines" // Valeur par défaut si non demandé
+      projectObjective: userResponses.question2,
+      technologies: userResponses.question3,
+      targetAudience: userResponses.question4,
+      githubUsername: userResponses.question5,
+      level: "Débutant/Intermédiaire", // Valeur par défaut
+      timeEstimate: "Quelques semaines" // Valeur par défaut
     };
 
     let githubData = null;
-    if (questionnaireResponses.githubUsername && questionnaireResponses.githubUsername !== 'aucun') {
+    if (questionnaireResponses.githubUsername && questionnaireResponses.githubUsername.toLowerCase() !== 'aucun') {
         try {
             console.log(`[generateProjectIdeaFromAPI] Fetching GitHub data for: ${questionnaireResponses.githubUsername}`);
-            // NOTE: Assurez-vous que le port est correct !
-            // Utilisez process.env.REACT_APP_API_URL si vous l'avez configuré dans le .env du frontend
-            const githubRes = await axios.get(`http://localhost:5000/api/github/${questionnaireResponses.githubUsername}`);
+            // UTILISATION DE L'URL DE BACKEND RENDER
+            const githubRes = await axios.get(`${BASE_BACKEND_URL}/api/github/${questionnaireResponses.githubUsername}`);
             githubData = githubRes.data;
             console.log("[generateProjectIdeaFromAPI] GitHub data fetched:", githubData);
         } catch (error) {
@@ -129,18 +125,15 @@ function ChatbotPage() {
         }
     }
 
-
     try {
-      // NOTE: Assurez-vous que le port est correct !
-      // Utilisez process.env.REACT_APP_API_URL si vous l'avez configuré dans le .env du frontend
-      const response = await axios.post(`http://localhost:5000/api/generate-project`, {
+      // UTILISATION DE L'URL DE BACKEND RENDER
+      const response = await axios.post(`${BASE_BACKEND_URL}/api/generate-project`, {
         githubData: githubData,
         questionnaireResponses: questionnaireResponses,
       });
 
-      const ideaData = response.data; // Le backend renvoie déjà le JSON parsé
+      const ideaData = response.data;
 
-      // Formatter l'idée pour l'affichage (similaire à comment vous l'aviez fait, mais avec les vraies données)
       let formattedIdea = `
         **Idée de Projet Générée par REO :**
 
@@ -155,7 +148,7 @@ function ChatbotPage() {
       });
       formattedIdea += `\nReo est à votre disposition pour affiner cette idée et vous accompagner dans sa concrétisation.`;
 
-      setGeneratedIdea(formattedIdea); // Met à jour l'état generatedIdea avec la réponse réelle
+      setGeneratedIdea(formattedIdea);
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: 'bot', text: "Voici votre idée de projet :" },
@@ -174,7 +167,7 @@ function ChatbotPage() {
         { sender: 'bot', text: errorMessage },
       ]);
     } finally {
-      setIsLoadingIdea(false); // Termine l'état de chargement, que ce soit une réussite ou une erreur
+      setIsLoadingIdea(false);
     }
   };
 
