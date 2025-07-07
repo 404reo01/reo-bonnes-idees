@@ -1,12 +1,12 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 const axios = require('axios');
-const { GoogleGenerativeAI } = require('@google/generative-ai'); 
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
-const port = process.env.PORT || 5000; 
+const port = process.env.PORT || 5000;
 
 // Configuration Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -17,15 +17,15 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const geminiApiKey = process.env.GEMINI_API_KEY;
 if (!geminiApiKey) {
     console.error("Erreur: GEMINI_API_KEY n'est pas défini dans le fichier .env");
-    process.exit(1); 
+    process.exit(1);
 }
 const genAI = new GoogleGenerativeAI(geminiApiKey);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Middlewares
-app.use(cors()); 
-app.use(express.json()); 
+app.use(cors());
+app.use(express.json());
 
 // Route de test
 app.get('/', (req, res) => {
@@ -56,7 +56,7 @@ app.get('/api/github/:username', async (req, res) => {
 
         // Analyser les langages et thèmes (simple pour l'instant)
         const languages = {};
-        const topics = new Set(); 
+        const topics = new Set();
 
         reposData.forEach(repo => {
             if (repo.language) {
@@ -103,9 +103,9 @@ app.post('/api/generate-project', async (req, res) => {
         - Thèmes de projets habituels : ${githubData && githubData.project_topics ? githubData.project_topics.join(', ') : 'Non renseigné'}
 
         Voici les préférences de l'utilisateur (via le questionnaire) :
-        - Langage souhaité (à utiliser ou apprendre) : ${questionnaireResponses.languagePreference || 'Pas de préférence'}
+        - Langage souhaité (à utiliser ou apprendre) : ${questionnaireResponses.technologies || 'Pas de préférence'}
         - Centres d'intérêt : ${questionnaireResponses.interests || 'Non spécifié'}
-        - Type de projet : ${questionnaireResponses.projectType || 'Utile ou fun'} (utile pour le CV ou fun pour le loisir)
+        - Type de projet : ${questionnaireResponses.projectObjective || 'Utile ou fun'} (utile pour le CV ou fun pour le loisir)
         - Niveau actuel : ${questionnaireResponses.level || 'Débutant'}
         - Temps de réalisation estimé : ${questionnaireResponses.timeEstimate || 'Quelques jours'}
 
@@ -151,7 +151,7 @@ app.post('/api/generate-project', async (req, res) => {
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        const text = response.text(); 
+        const text = response.text();
 
         // Tenter de parser le JSON
         if (text.includes('```json')) { // Vérifier si le JSON est bien encadré

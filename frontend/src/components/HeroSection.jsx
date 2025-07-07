@@ -11,7 +11,7 @@ function HeroSection({ onGenerateProject }) {
       </h2>
 
       <p className="text-lg md:text-xl mb-10 text-gray-light opacity-85 max-w-xl">
-        L'outil intelligent qui vous aide à générer des idées projets et à les concrétiser.
+        L'outil intelligent qui t'aide à trouver des idées de projets et à les concrétiser. T'auras plus d'excuse pour pas te lancer.
       </p>
 
       <button
@@ -22,7 +22,7 @@ function HeroSection({ onGenerateProject }) {
                    shadow-lg transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sunset-orange focus:ring-opacity-50"
         onClick={onGenerateProject}
       >
-        <span className="relative z-10">Générer une Idée Maintenant !</span>
+        <span className="relative z-10">Inspire moi ! (pas de titanic ici tqt) </span>
         <span className="absolute inset-0 bg-sunset-orange opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-full"></span>
       </button>
     </div>
