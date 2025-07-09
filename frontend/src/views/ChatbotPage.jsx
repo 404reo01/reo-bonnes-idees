@@ -19,11 +19,12 @@ function ChatbotPage() {
   const BASE_BACKEND_URL = 'https://reo-bonnes-idees.onrender.com';
 
   const questions = [
-    "Bonjour ! Je suis Reo, votre assistant pour la génération d'idées. Pour commencer, quel est le domaine ou le secteur d'activité qui vous intéresse le plus pour votre projet ? (Ex: technologie, environnement, éducation, santé, art, etc.)",
+    "Bonjour ! Je suis Mecha-Reo, votre assistant pour la génération d'idées. Pour commencer, quel est le domaine ou le secteur d'activité qui vous intéresse le plus pour votre projet ? (Ex: technologie, environnement, éducation, santé, art, etc.)",
     "Très bien. Quels sont vos centres d'intérêt, vos passions, ou des sujets qui vous tiennent particulièrement à cœur et que vous aimeriez explorer via un projet ? (Ex: jeux vidéo, cuisine, musique, lecture, voyages, fitness, développement personnel, etc.)",
     "Quel est l'objectif principal de votre projet ? Cherchez-vous à résoudre un problème spécifique, à créer quelque chose de ludique, à explorer une nouvelle idée, ou autre ? (Ex: Application utilitaire, jeu, outil éducatif, plateforme artistique, projet expérimental, etc.)",
     "Envisagez-vous d'utiliser des langages de programmation ou des technologies spécifiques pour ce projet ? Si oui, lesquels ? (Ex: Python, JavaScript, React, Node.js, C#, mobile, web, IA, blockchain, etc.)",
     "Quel est le public cible de votre projet ? Qui sont les utilisateurs finaux ? (Ex: étudiants, petites entreprises, personnes âgées, artistes, communautés locales, etc.)",
+     "Quel est votre niveau actuel en développement ? (Ex: Débutant, Intermédiaire, Avancé)",
     "Pour vous aider à concrétiser, quel est votre nom d'utilisateur GitHub ? (Si vous en avez un, sinon vous pouvez taper 'aucun')"
   ];
 
@@ -106,8 +107,8 @@ function ChatbotPage() {
       projectObjective: userResponses.question2,
       technologies: userResponses.question3,
       targetAudience: userResponses.question4,
-      githubUsername: userResponses.question5,
-      level: "Débutant/Intermédiaire", // Valeur par défaut
+      level: userResponses.question5, 
+      githubUsername: userResponses.question6,
       timeEstimate: "Quelques semaines" // Valeur par défaut
     };
 
@@ -199,7 +200,7 @@ function ChatbotPage() {
             Répondez aux questions pour générer votre idée de projet !
           </p>
 
-          <div className="flex-grow overflow-y-auto p-4 mb-4 rounded-lg bg-gray-dark bg-opacity-70 custom-scrollbar">
+          <div className="flex-grow overflow-y-auto p-4 mb-4 rounded-lg bg-gray-dark bg-opacity-70 custom-scrollbar min-h-[350px]"> 
             {messages.map((msg, index) => (
               <div
                 key={index}
