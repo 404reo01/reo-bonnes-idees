@@ -189,8 +189,8 @@ function ChatbotPage() {
 
       <main className="flex flex-col items-center px-4 max-w-2xl w-full z-10 flex-grow pt-24">
         <div className="relative z-10 text-center w-full p-8 rounded-2xl border border-glassy-border
-                            bg-glassy-bg backdrop-filter backdrop-blur-lg backdrop-saturate-150 shadow-xl
-                            flex flex-col h-[70vh] max-h-[800px]">
+                        bg-glassy-bg backdrop-filter backdrop-blur-lg backdrop-saturate-150 shadow-xl
+                        flex flex-col h-[85vh] max-h-[950px]"> 
 
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4
                          bg-clip-text text-transparent bg-gradient-to-r from-sunset-orange to-sunset-gold">
@@ -200,7 +200,7 @@ function ChatbotPage() {
             Répondez aux questions pour générer votre idée de projet !
           </p>
 
-          <div className="flex-grow overflow-y-auto p-4 mb-4 rounded-lg bg-gray-dark bg-opacity-70 custom-scrollbar min-h-[350px]"> 
+          <div className="flex-grow overflow-y-auto p-4 mb-4 rounded-lg bg-gray-dark bg-opacity-70 custom-scrollbar min-h-[350px]">  
             {messages.map((msg, index) => (
               <div
                 key={index}
