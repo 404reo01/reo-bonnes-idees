@@ -19,17 +19,7 @@ function HowItWorksSection({ onLearnMore }) {
           <span className="text-sunset-orange font-bold">3. Affinez et concrétisez :</span> Tu peux affiner les idées, poser des questions, et même demander des conseils pour te lancer. On est là pour t'aider à chaque étape.
         </p>
       </div>
-      <button
-        className="mt-8 relative px-8 py-3 rounded-full text-md font-bold
-                   bg-glassy-bg backdrop-filter backdrop-blur-lg backdrop-saturate-150 border border-glassy-border
-                   text-sunset-gold hover:text-gray-light
-                   transition-colors duration-300 ease-in-out
-                   shadow-lg transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sunset-gold focus:ring-opacity-50"
-        onClick={onLearnMore} // Utilisation de la prop
-      >
-        <span className="relative z-10">En savoir plus sur la méthode</span>
-        <span className="absolute inset-0 bg-sunset-gold opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-full"></span>
-      </button>
+     
     </section>
   );
 }
