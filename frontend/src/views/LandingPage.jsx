@@ -38,7 +38,7 @@ function LandingPage() {
 
       <main className="flex flex-col items-center px-4 max-w-2xl w-full z-10 flex-grow pt-24">
         <HeroSection onGenerateProject={handleGenerateProjectClick} />
-        <HowItWorksSection onLearnMore={handleLearnMoreClick} />
+        <HowItWorksSection />
         <ProjectsSection />
       </main>
 
